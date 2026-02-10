@@ -1,0 +1,25 @@
+{
+  "name": "playwright-fmw",
+  "version": "1.0.0",
+  "description": "Playwright framework for testing web applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olguinc/playwright-fmw.git"
+  },
+  "keywords": [],
+  "author": "Carolina Olguin",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/olguinc/playwright-fmw/issues"
+  },
+  "homepage": "https://github.com/olguinc/playwright-fmw#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.2"
+  }
+}
