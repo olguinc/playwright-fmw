@@ -27,7 +27,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL */
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://parabank.parasoft.com/parabank/index.htm',
     headless: true,
     testIdAttribute: 'id',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
