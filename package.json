@@ -4,7 +4,12 @@
   "description": "Playwright framework for testing web applications",
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test --headed"
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:ui": "npx playwright test --ui",
+    "test:ci": "npx playwright test --reporter=html,line",
+    "report": "npx playwright show-report"
   },
   "repository": {
     "type": "git",
