@@ -4,8 +4,12 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
 jobs:
-  test:
+  smoke:
+    if: github.event_name == 'pull_request'
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -13,15 +17,67 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+        cache: npm
+        cache-dependency-path: package-lock.json
+    - name: Resolve Playwright version
+      id: playwright-version
+      run: echo "version=$(node -e \"console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)\")" >> "$GITHUB_OUTPUT"
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}-
+          ${{ runner.os }}-playwright-
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
+    - name: Run Chromium smoke tests
+      run: npm run test:ci:smoke
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
-        name: playwright-report
+        name: playwright-report-smoke
+        path: playwright-report/
+        retention-days: 30
+
+  matrix:
+    if: github.event_name != 'pull_request'
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: npm
+        cache-dependency-path: package-lock.json
+    - name: Resolve Playwright version
+      id: playwright-version
+      run: echo "version=$(node -e \"console.log(require('./package-lock.json').packages['node_modules/@playwright/test'].version)\")" >> "$GITHUB_OUTPUT"
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}-${{ hashFiles('package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}-
+          ${{ runner.os }}-playwright-
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run matrix tests
+      run: npx playwright test --project=${{ matrix.browser }} --reporter=html,line
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report-${{ matrix.browser }}
         path: playwright-report/
         retention-days: 30

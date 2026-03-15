@@ -1,18 +1,8 @@
-import { expect, test } from '@playwright/test';
-import { RegistrationPage } from '../pages/registration.page';
+import { expect, test } from '../fixtures/registration.fixture';
 import { buildUser } from '../test-data/user.factory';
 
 test.describe('Registration', () => {
-  test.beforeEach(async ({ page }) => {
-    const registrationPage = new RegistrationPage(page);
-    await registrationPage.goto();
-    await expect(page).toHaveURL(/\/register\.htm/);
-    await registrationPage.isReady();
-  });
-
-  test('should create a new user', async ({ page }) => {
-    const registrationPage = new RegistrationPage(page);
-    const user = buildUser();
+  test('should create a new user @smoke', async ({ page, registrationPage, newUser: user }) => {
     await registrationPage.registerUser(user);
 
     await expect(
@@ -27,8 +17,7 @@ test.describe('Registration', () => {
     await page.getByRole('link', { name: 'Log Out' }).click();
   });
 
-  test('existing user', async ({ page }) => {
-    const registrationPage = new RegistrationPage(page);
+  test('existing user', async ({ page, registrationPage }) => {
     const existingUser = buildUser();
 
     await registrationPage.registerUser(existingUser);
@@ -41,8 +30,7 @@ test.describe('Registration', () => {
     );
   });
 
-  test('passwords do not match', async ({ page }) => {
-    const registrationPage = new RegistrationPage(page);
+  test('passwords do not match', async ({ registrationPage }) => {
     const userWithMismatchPassword = buildUser({ repeatedPassword: '1234' });
 
     await registrationPage.registerUser(userWithMismatchPassword);
