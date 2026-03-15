@@ -6,7 +6,7 @@ let testUser = {
   pass: 'pass',
 };
 
-test.describe('SignUp', () => {
+test.describe('Registration', () => {
   test.beforeEach(async ({ page }) => {
     // Go to the registration page before each test.
     await page.goto('https://parabank.parasoft.com/parabank/index.htm');
