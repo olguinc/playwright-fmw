@@ -56,12 +56,6 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Data isolation: each execution creates unique usernames to avoid collisions.
 - Debuggability: trace, screenshots, and video are retained on failures according to config.
 
-## Configuration Notes
-
-- Base URL is configured in `playwright.config.ts`.
-- `BASE_URL` environment variable can override the default URL.
-- The framework currently runs Chromium by default and can be expanded to Firefox/WebKit.
-
 ## Prerequisites
 
 - Node.js 18 or newer
@@ -115,5 +109,5 @@ npm run test:ci
 
 ## References
 
-- [Playwright docs](https://playwright.dev/docs/intro)
+- [Playwright Documentation](https://playwright.dev/docs/intro)
 - [Playwright best practices](https://playwright.dev/docs/best-practices)
