@@ -26,6 +26,8 @@ Application under test: https://parabank.parasoft.com/parabank/
 
 ```text
 .
+├── fixtures/                 # Domain fixtures (dependency injection for tests)
+│   └── registration.fixture.ts
 ├── pages/                    # Page objects (UI actions and locators)
 │   └── registration.page.ts
 ├── test-data/                # Test data files
@@ -38,7 +40,7 @@ Application under test: https://parabank.parasoft.com/parabank/
 └── README.md                 # Project documentation
 ```
 
-Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
+Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `fixtures/` provides consistent dependency injection setup, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
 
 ## Test Scenarios
 
@@ -53,14 +55,9 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Independent tests: every test is self-contained and avoids shared mutable state.
 - Stable selectors: selectors use the configured test id attribute and semantic locators.
 - Reusability: shared UI actions live in page objects.
+- Consistent dependency injection: domain fixtures provide pages and test data setup.
 - Data isolation: each execution creates unique usernames to avoid collisions.
 - Debuggability: trace, screenshots, and video are retained on failures according to config.
-
-## Configuration Notes
-
-- Base URL is configured in `playwright.config.ts`.
-- `BASE_URL` environment variable can override the default URL.
-- The framework currently runs Chromium by default and can be expanded to Firefox/WebKit.
 
 ## Prerequisites
 
@@ -78,10 +75,13 @@ npx playwright install --with-deps
 
 ```sh
 npm test                  # Run all tests headless
+npm run test:smoke        # Fast smoke lane (@smoke on Chromium)
 npm run test:headed       # Run with browser visible
 npm run test:debug        # Run in debug mode
 npm run test:ui           # Open Playwright UI mode
 npm run test:ci           # Run with CI reporters (html, line)
+npm run test:ci:smoke     # CI smoke lane on Chromium
+npm run test:ci:matrix    # CI full suite (all configured projects)
 npm run typecheck         # TypeScript type checking
 npm run report            # Open the last HTML report
 ```
@@ -110,10 +110,16 @@ Recommended pipeline steps:
 npm ci
 npx playwright install --with-deps
 npm run typecheck
-npm run test:ci
+npm run test:ci:smoke     # pull requests (fast feedback)
+npm run test:ci:matrix    # main/nightly (cross-browser confidence)
 ```
+
+## Execution Strategy
+
+- Pull requests: fast smoke execution in Chromium using `@smoke` tags.
+- Main branch and nightly schedule: full browser matrix (`chromium`, `firefox`, `webkit`).
 
 ## References
 
-- [Playwright docs](https://playwright.dev/docs/intro)
+- [Playwright Documentation](https://playwright.dev/docs/intro)
 - [Playwright best practices](https://playwright.dev/docs/best-practices)
