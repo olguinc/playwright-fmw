@@ -13,8 +13,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
       with:
         node-version: lts/*
         cache: npm
@@ -36,11 +36,12 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Chromium smoke tests
       run: npm run test:ci:smoke
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: ${{ !cancelled() }}
       with:
         name: playwright-report-smoke
         path: playwright-report/
+        if-no-files-found: ignore
         retention-days: 30
 
   matrix:
@@ -52,8 +53,8 @@ jobs:
       matrix:
         browser: [chromium, firefox, webkit]
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - uses: actions/checkout@v5
+    - uses: actions/setup-node@v5
       with:
         node-version: lts/*
         cache: npm
@@ -75,9 +76,10 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run matrix tests
       run: npx playwright test --project=${{ matrix.browser }} --reporter=html,line
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v5
       if: ${{ !cancelled() }}
       with:
         name: playwright-report-${{ matrix.browser }}
         path: playwright-report/
+        if-no-files-found: ignore
         retention-days: 30

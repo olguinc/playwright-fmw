@@ -9,7 +9,7 @@
     "test:debug": "npx playwright test --debug",
     "test:ui": "npx playwright test --ui",
     "test:ci": "npx playwright test --reporter=html,line",
-    "test:ci:smoke": "npx playwright test --project=chromium --grep @smoke --reporter=line",
+    "test:ci:smoke": "npx playwright test --project=chromium --grep @smoke --reporter=html,line",
     "test:ci:matrix": "npx playwright test --reporter=html,line",
     "report": "npx playwright show-report",
     "typecheck": "npx tsc -p tsconfig.json"
