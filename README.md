@@ -1,122 +1,119 @@
-# Playwright Automation Framework | ParaBank Project
+# Playwright Automation Framework | ParaBank
 
 ## Overview
 
-This repository implements an automated end-to-end testing framework for [ParaBank Demo Site](https://parabank.parasoft.com/parabank/index.htm) using [Playwright](https://playwright.dev/). The framework is focused on maintainability, scalability, and reliability.
+This repository provides an end-to-end automation framework for the ParaBank demo site using Playwright and TypeScript. The design prioritizes scalability, reliability, and maintainability.
 
----
+Application under test: https://parabank.parasoft.com/parabank/
 
-## Test Strategy
+## Features
 
-### Goals
+- TypeScript-based Playwright framework.
+- Registration flow test coverage.
+- Page Object Model for reusable UI interactions.
+- Test data factory for unique user generation.
+- HTML and list reporting.
+- CI-ready scripts and strict type checking.
 
-- **Automate critical user journeys** to ensure application stability.
-- **Enable fast feedback** for developers via CI integration.
-- **Promote code reuse** and maintainability through modular design.
+## Tech Stack
 
-### Scope
-
-- **Functional UI tests** for user registration, login, and core banking features.
-- **Negative and edge case testing** for robust coverage.
-- **Cross-browser testing** (Chromium by default; easily extendable).
-
-### Approach
-
-- **Test Data Management:** Test data is isolated per test run to avoid conflicts.
-- **Assertions:** Use Playwright’s built-in expect API for clear, reliable assertions.
-- **Reporting:** HTML reports are generated for each run and uploaded as CI artifacts.
-
----
-
-## Tools & Technologies
-
-- **[Playwright](https://playwright.dev/):** Browser automation library.
-- **Node.js:** JavaScript runtime.
-- **GitHub Actions:** CI/CD for automated test execution.
-- **HTML Reporter:** Visual test results.
-
----
+- Playwright
+- TypeScript
+- Node.js
+- npm
 
 ## Project Structure
 
-```
+```text
 .
-├── tests/                # Test specs (organized by features)
-│   └── registration.spec.js
-├── test-data/            # Test data files (if needed)
-├── playwright.config.js  # Playwright configuration
-├── playwright-report/    # Generated HTML reports
-├── .github/workflows/    # CI configuration
-├── package.json          # Project dependencies and scripts
-└── README.md             # Project documentation
+├── pages/                    # Page objects (UI actions and locators)
+│   └── registration.page.ts
+├── test-data/                # Test data files
+│   └── user.factory.ts       # User data factory/builders
+├── tests/                    # Test specs (organized by features)
+│   └── registration.spec.ts
+├── playwright.config.ts      # Playwright configuration
+├── tsconfig.json             # TypeScript compiler configuration
+├── package.json              # Project dependencies and scripts
+└── README.md                 # Project documentation
 ```
 
----
+Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
 
-## Patterns & Best Practices
+## Test Scenarios
 
-- **Page Object Model (POM):** (Recommended for larger suites) Encapsulate page interactions in reusable classes.
-- **Test Isolation:** Each test creates its own user data to avoid state leakage.
-- **Consistent Selectors:** Use `data-testid` attributes for robust element targeting.
-- **CI Integration:** Tests run automatically on push and pull requests.
+| # | Feature | Scenario | Expected Result |
+|---|---------|----------|-----------------|
+| 1 | Registration | Successful new user registration | Success message and welcome heading with username are visible |
+| 2 | Registration | Attempt to register with an existing username | Inline error: "This username already exists." |
+| 3 | Registration | Password and confirm password do not match | Inline error: "Passwords did not match." |
 
----
+## Test Design Principles
 
-## Getting Started
+- Independent tests: every test is self-contained and avoids shared mutable state.
+- Stable selectors: selectors use the configured test id attribute and semantic locators.
+- Reusability: shared UI actions live in page objects.
+- Data isolation: each execution creates unique usernames to avoid collisions.
+- Debuggability: trace, screenshots, and video are retained on failures according to config.
 
-### Prerequisites
+## Configuration Notes
 
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [npm](https://www.npmjs.com/)
+- Base URL is configured in `playwright.config.ts`.
+- `BASE_URL` environment variable can override the default URL.
+- The framework currently runs Chromium by default and can be expanded to Firefox/WebKit.
 
-### Installation
+## Prerequisites
+
+- Node.js 18 or newer
+- npm
+
+## Installation
 
 ```sh
 npm ci
 npx playwright install --with-deps
 ```
 
-### Running Tests Locally
+## Running Tests
 
 ```sh
-npm test
+npm test                  # Run all tests headless
+npm run test:headed       # Run with browser visible
+npm run test:debug        # Run in debug mode
+npm run test:ui           # Open Playwright UI mode
+npm run test:ci           # Run with CI reporters (html, line)
+npm run typecheck         # TypeScript type checking
+npm run report            # Open the last HTML report
 ```
 
-### Viewing Reports
-
-After a test run, open the HTML report:
+Run a single spec:
 
 ```sh
-npx playwright show-report
+npx playwright test tests/registration.spec.ts
 ```
 
----
+## Reports and Artifacts
 
-## Continuous Integration
+After execution, an HTML report is generated. Open it with:
 
-- **GitHub Actions** is configured in [`.github/workflows/playwright.yml`](.github/workflows/playwright.yml).
-- On each push/PR to `main`/`master`, tests are executed and reports are uploaded as artifacts.
+```sh
+npm run report
+```
 
----
+On failures, traces, screenshots, and video are retained according to the Playwright configuration.
 
-## Contributing
+## CI Guidance
 
-- **Naming:** Use descriptive names for test cases and variables.
-- **Structure:** Place new specs in the `tests/` directory.
-- **Selectors:** Prefer `data-testid` attributes for targeting elements.
-- **Pull Requests:** Ensure all tests pass locally and in CI before submitting.
+Recommended pipeline steps:
 
----
-
-## Troubleshooting
-
-- **Flaky Tests:** Review selectors and add appropriate waits.
-- **Test Data Collisions:** Ensure unique data per test run.
-- **CI Failures:** Download and inspect the Playwright HTML report artifact.
-
----
+```sh
+npm ci
+npx playwright install --with-deps
+npm run typecheck
+npm run test:ci
+```
 
 ## References
 
-- [Playwright Documentation](https://playwright.dev/docs/intro)
-- [Playwright Best Practices](https://playwright.dev/docs/best-practices)
+- [Playwright docs](https://playwright.dev/docs/intro)
+- [Playwright best practices](https://playwright.dev/docs/best-practices)

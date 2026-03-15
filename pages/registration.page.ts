@@ -1,5 +1,24 @@
+import type { Locator, Page } from '@playwright/test';
+import type { UserRegistrationData } from '../test-data/user.factory';
+
 export class RegistrationPage {
-  constructor(page) {
+  readonly page: Page;
+  readonly firstName: Locator;
+  readonly lastName: Locator;
+  readonly street: Locator;
+  readonly city: Locator;
+  readonly state: Locator;
+  readonly zipCode: Locator;
+  readonly phoneNumber: Locator;
+  readonly ssn: Locator;
+  readonly username: Locator;
+  readonly password: Locator;
+  readonly repeatedPassword: Locator;
+  readonly submitButton: Locator;
+  readonly usernameError: Locator;
+  readonly repeatedPasswordError: Locator;
+
+  constructor(page: Page) {
     this.page = page;
     this.firstName = page.getByTestId('customer.firstName');
     this.lastName = page.getByTestId('customer.lastName');
@@ -17,16 +36,16 @@ export class RegistrationPage {
     this.repeatedPasswordError = page.getByTestId('repeatedPassword.errors');
   }
 
-  async goto() {
+  async goto(): Promise<void> {
     await this.page.goto('index.htm');
     await this.page.getByRole('link', { name: 'Register' }).click();
   }
 
-  async isReady() {
+  async isReady(): Promise<void> {
     await this.firstName.waitFor({ state: 'visible' });
   }
 
-  async registerUser(user) {
+  async registerUser(user: UserRegistrationData): Promise<void> {
     await this.firstName.fill(user.firstName);
     await this.lastName.fill(user.lastName);
     await this.street.fill(user.street);
