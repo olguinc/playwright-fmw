@@ -2,14 +2,14 @@
   "name": "playwright-fmw",
   "version": "1.0.0",
   "description": "Playwright framework for testing web applications",
-  "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
     "test:headed": "npx playwright test --headed",
     "test:debug": "npx playwright test --debug",
     "test:ui": "npx playwright test --ui",
     "test:ci": "npx playwright test --reporter=html,line",
-    "report": "npx playwright show-report"
+    "report": "npx playwright show-report",
+    "typecheck": "npx tsc -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "homepage": "https://github.com/olguinc/playwright-fmw#readme",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.2.2"
+    "@types/node": "^25.2.2",
+    "typescript": "^5.9.3"
   }
 }

@@ -1,5 +1,4 @@
-// @ts-check
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { RegistrationPage } from '../pages/registration.page';
 import { buildUser } from '../test-data/user.factory';
 
@@ -16,14 +15,15 @@ test.describe('Registration', () => {
     const user = buildUser();
     await registrationPage.registerUser(user);
 
-    // Expect a successful message to confirm the new user is registered.
     await expect(
       page.getByText(
         'Your account was created successfully. You are now logged in.',
         { exact: true },
       ),
     ).toBeVisible();
-    await expect(page.getByRole('heading', { name: `Welcome ${user.username}` })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: `Welcome ${user.username}` }),
+    ).toBeVisible();
     await page.getByRole('link', { name: 'Log Out' }).click();
   });
 
