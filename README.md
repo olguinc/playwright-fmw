@@ -74,6 +74,8 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Node.js 18 or newer
 - npm
 
+---
+
 ## 📦 Installation
 
 ```sh
