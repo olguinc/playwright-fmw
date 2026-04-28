@@ -1,12 +1,10 @@
-# Playwright Automation Framework | ParaBank
-
-## Overview
+# 🧪 ParaBank | Playwright Automation Framework 
 
 This repository provides an end-to-end automation framework for the ParaBank demo site using Playwright and TypeScript. The design prioritizes scalability, reliability, and maintainability.
 
 Application under test: https://parabank.parasoft.com/parabank/
 
-## Features
+## 📋 Features
 
 - TypeScript-based Playwright framework.
 - Registration flow test coverage.
@@ -15,14 +13,14 @@ Application under test: https://parabank.parasoft.com/parabank/
 - HTML and list reporting.
 - CI-ready scripts and strict type checking.
 
-## Tech Stack
+## 🛠️ Stack
 
 - Playwright
 - TypeScript
 - Node.js
 - npm
 
-## Project Structure
+## 🗂️ Project Structure
 
 ```text
 .
@@ -42,7 +40,7 @@ Application under test: https://parabank.parasoft.com/parabank/
 
 Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `fixtures/` provides consistent dependency injection setup, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
 
-## Test Scenarios
+## 📄 Test Scenarios
 
 | # | Feature | Scenario | Expected Result |
 |---|---------|----------|-----------------|
@@ -50,7 +48,7 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 | 2 | Registration | Attempt to register with an existing username | Inline error: "This username already exists." |
 | 3 | Registration | Password and confirm password do not match | Inline error: "Passwords did not match." |
 
-## Test Design Principles
+## 🔎 Test Design Principles
 
 - Independent tests: every test is self-contained and avoids shared mutable state.
 - Stable selectors: selectors use the configured test id attribute and semantic locators.
@@ -59,19 +57,19 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Data isolation: each execution creates unique usernames to avoid collisions.
 - Debuggability: trace, screenshots, and video are retained on failures according to config.
 
-## Prerequisites
+## ⚙ Prerequisites
 
 - Node.js 18 or newer
 - npm
 
-## Installation
+## 📦 Installation
 
 ```sh
 npm ci
 npx playwright install --with-deps
 ```
 
-## Running Tests
+## ▶️ Running Tests
 
 ```sh
 npm test                  # Run all tests headless
@@ -92,7 +90,7 @@ Run a single spec:
 npx playwright test tests/registration.spec.ts
 ```
 
-## Reports and Artifacts
+## 📊 Reports and Artifacts
 
 After execution, an HTML report is generated. Open it with:
 
@@ -102,24 +100,32 @@ npm run report
 
 On failures, traces, screenshots, and video are retained according to the Playwright configuration.
 
-## CI Guidance
 
-Recommended pipeline steps:
+## ☑ PR Review Automation
 
-```sh
-npm ci
-npx playwright install --with-deps
-npm run typecheck
-npm run test:ci:smoke     # pull requests (fast feedback)
-npm run test:ci:matrix    # main/nightly (cross-browser confidence)
-```
+This project includes a pull request review workflow using GitHub Actions:
 
-## Execution Strategy
+- Workflow file: `.github/workflows/pr-review-free.yml`
+- Trigger: every pull request update (`opened`, `synchronize`, `reopened`, `ready_for_review`)
+- Automated checks: install dependencies, install Playwright browsers, run `npm run typecheck`, run `npm run test:smoke`
+- PR feedback: posts (or updates) a bot comment with check status and practical suggestions based on changed files
+
+This setup provides lightweight, no-cost PR quality feedback without requiring paid third-party tools.
+
+## ➡ Execution Strategy
 
 - Pull requests: fast smoke execution in Chromium using `@smoke` tags.
 - Main branch and nightly schedule: full browser matrix (`chromium`, `firefox`, `webkit`).
 
-## References
+## 📚 References
 
 - [Playwright Documentation](https://playwright.dev/docs/intro)
 - [Playwright best practices](https://playwright.dev/docs/best-practices)
+
+---
+
+## 👩‍💻 Author
+
+**Carolina Olguin** — Senior QA Engineer · [GitHub](https://github.com/olguinc) · [LinkedIn](https://www.linkedin.com/in/carolina-olg/)
+
+> *"The best tests don't just find bugs — they document the expected behavior of the system."*
