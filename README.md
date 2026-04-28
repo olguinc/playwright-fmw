@@ -15,12 +15,16 @@ Application under test: https://parabank.parasoft.com/parabank/
 - HTML and list reporting.
 - CI-ready scripts and strict type checking.
 
+---
+
 ## 🛠️ Stack
 
 - Playwright
 - TypeScript
 - Node.js
 - npm
+
+---
 
 ## 🗂️ Project Structure
 
@@ -42,6 +46,8 @@ Application under test: https://parabank.parasoft.com/parabank/
 
 Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `fixtures/` provides consistent dependency injection setup, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
 
+---
+
 ## 📄 Test Scenarios
 
 | # | Feature | Scenario | Expected Result |
@@ -49,6 +55,8 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 | 1 | Registration | Successful new user registration | Success message and welcome heading with username are visible |
 | 2 | Registration | Attempt to register with an existing username | Inline error: "This username already exists." |
 | 3 | Registration | Password and confirm password do not match | Inline error: "Passwords did not match." |
+
+---
 
 ## 🔎 Test Design Principles
 
@@ -58,6 +66,8 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Consistent dependency injection: domain fixtures provide pages and test data setup.
 - Data isolation: each execution creates unique usernames to avoid collisions.
 - Debuggability: trace, screenshots, and video are retained on failures according to config.
+
+---
 
 ## ⚙ Prerequisites
 
@@ -70,6 +80,8 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 npm ci
 npx playwright install --with-deps
 ```
+
+---
 
 ## ▶️ Running Tests
 
@@ -92,6 +104,8 @@ Run a single spec:
 npx playwright test tests/registration.spec.ts
 ```
 
+---
+
 ## 📊 Reports and Artifacts
 
 After execution, an HTML report is generated. Open it with:
@@ -102,6 +116,7 @@ npm run report
 
 On failures, traces, screenshots, and video are retained according to the Playwright configuration.
 
+---
 
 ## ☑ PR Review Automation
 
@@ -114,10 +129,14 @@ This project includes a pull request review workflow using GitHub Actions:
 
 This setup provides lightweight, no-cost PR quality feedback without requiring paid third-party tools.
 
+---
+
 ## ➡ Execution Strategy
 
 - Pull requests: fast smoke execution in Chromium using `@smoke` tags.
 - Main branch and nightly schedule: full browser matrix (`chromium`, `firefox`, `webkit`).
+
+---
 
 ## 📚 References
 
