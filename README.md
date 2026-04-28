@@ -4,6 +4,8 @@ This repository provides an end-to-end automation framework for the ParaBank dem
 
 Application under test: https://parabank.parasoft.com/parabank/
 
+---
+
 ## 📋 Features
 
 - TypeScript-based Playwright framework.
