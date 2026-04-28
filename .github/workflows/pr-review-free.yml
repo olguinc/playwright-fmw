@@ -1,0 +1,143 @@
+name: PR Review Free
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+jobs:
+  quality-checks:
+    name: Quality Checks
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Smoke tests
+        run: npm run test:smoke
+
+  pr-suggestions:
+    name: PR Suggestions
+    if: always() && github.event.pull_request.draft == false
+    needs: [quality-checks]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Post PR suggestions comment
+        uses: actions/github-script@v8
+        env:
+          QUALITY_RESULT: ${{ needs.quality-checks.result }}
+        with:
+          script: |
+            const marker = '<!-- pr-review-free-bot -->';
+            const result = process.env.QUALITY_RESULT || 'unknown';
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const issue_number = context.issue.number;
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner,
+              repo,
+              pull_number: issue_number,
+              per_page: 100,
+            });
+
+            const names = files.map((f) => f.filename);
+            const touchesTests = names.some((n) => n.startsWith('tests/') || n.includes('.spec.'));
+            const touchesPagesOrFixtures = names.some((n) => n.startsWith('pages/') || n.startsWith('fixtures/'));
+            const touchesWorkflow = names.some((n) => n.startsWith('.github/workflows/'));
+            const touchesDeps = names.some((n) => n === 'package.json' || n === 'package-lock.json');
+
+            const statusLine =
+              result === 'success'
+                ? 'Estado checks: Aprobado'
+                : result === 'failure'
+                  ? 'Estado checks: Fallo en quality-checks'
+                  : 'Estado checks: Revisar ejecucion del workflow';
+
+            const suggestions = [];
+            if (touchesPagesOrFixtures && !touchesTests) {
+              suggestions.push('- Agregar o ajustar pruebas en tests/ para cubrir cambios funcionales.');
+            }
+            if (touchesDeps) {
+              suggestions.push('- Verificar impacto de dependencias y actualizar notas de cambios relevantes.');
+            }
+            if (touchesWorkflow) {
+              suggestions.push('- Confirmar que los cambios de CI mantienen tiempos y estabilidad del pipeline.');
+            }
+            if (suggestions.length === 0) {
+              suggestions.push('- Mantener pruebas smoke actualizadas y considerar casos negativos del flujo modificado.');
+            }
+
+            const body = [
+              marker,
+              '## Revision automatica gratuita',
+              '',
+              statusLine,
+              '',
+              'Sugerencias para este PR:',
+              ...suggestions,
+            ].join('\n');
+
+            try {
+              const comments = await github.paginate(github.rest.issues.listComments, {
+                owner,
+                repo,
+                issue_number,
+                per_page: 100,
+              });
+
+              const previous = comments.find(
+                (c) => c.user?.type === 'Bot' && c.body?.includes(marker)
+              );
+
+              if (previous) {
+                await github.rest.issues.updateComment({
+                  owner,
+                  repo,
+                  comment_id: previous.id,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner,
+                  repo,
+                  issue_number,
+                  body,
+                });
+              }
+            } catch (error) {
+              core.warning(`No se pudo escribir comentario de PR: ${error.message}`);
+            }
