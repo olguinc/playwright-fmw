@@ -123,6 +123,6 @@ This setup provides lightweight, no-cost PR quality feedback without requiring p
 
 ## 👩🏻‍💻 Author
 
-**Carolina Olguin** — Senior QA Engineer · [GitHub](https://github.com/olguinc) · [LinkedIn](https://www.linkedin.com/in/carolina-olg/)
+**Carolina Olguin** — Senior QA Engineer · [GitHub](https://github.com/olguinc) · [LinkedIn](https://www.linkedin.com/in/carolina-olg/) · [Portfolio](https://olguinc.github.io/)
 
 > *"The best tests don't just find bugs — they document the expected behavior of the system."*
