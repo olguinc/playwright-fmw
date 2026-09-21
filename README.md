@@ -4,8 +4,6 @@ This repository provides an end-to-end automation framework for the ParaBank dem
 
 Application under test: https://parabank.parasoft.com/parabank/
 
----
-
 ## 📋 Features
 
 - TypeScript-based Playwright framework.
@@ -15,16 +13,12 @@ Application under test: https://parabank.parasoft.com/parabank/
 - HTML and list reporting.
 - CI-ready scripts and strict type checking.
 
----
-
 ## 🛠️ Stack
 
 - Playwright
 - TypeScript
 - Node.js
 - npm
-
----
 
 ## 🗂️ Project Structure
 
@@ -46,8 +40,6 @@ Application under test: https://parabank.parasoft.com/parabank/
 
 Note: this structure follows a clear separation of responsibilities: `tests/` defines scenarios, `fixtures/` provides consistent dependency injection setup, `pages/` encapsulates UI behavior, and `test-data/` provides reusable input data.
 
----
-
 ## 📄 Test Scenarios
 
 | # | Feature | Scenario | Expected Result |
@@ -55,8 +47,6 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 | 1 | Registration | Successful new user registration | Success message and welcome heading with username are visible |
 | 2 | Registration | Attempt to register with an existing username | Inline error: "This username already exists." |
 | 3 | Registration | Password and confirm password do not match | Inline error: "Passwords did not match." |
-
----
 
 ## 🔎 Test Design Principles
 
@@ -67,14 +57,10 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 - Data isolation: each execution creates unique usernames to avoid collisions.
 - Debuggability: trace, screenshots, and video are retained on failures according to config.
 
----
-
 ## ⚙ Prerequisites
 
 - Node.js 18 or newer
 - npm
-
----
 
 ## 📦 Installation
 
@@ -82,8 +68,6 @@ Note: this structure follows a clear separation of responsibilities: `tests/` de
 npm ci
 npx playwright install --with-deps
 ```
-
----
 
 ## ▶️ Running Tests
 
@@ -106,8 +90,6 @@ Run a single spec:
 npx playwright test tests/registration.spec.ts
 ```
 
----
-
 ## 📊 Reports and Artifacts
 
 After execution, an HTML report is generated. Open it with:
@@ -117,8 +99,6 @@ npm run report
 ```
 
 On failures, traces, screenshots, and video are retained according to the Playwright configuration.
-
----
 
 ## ☑ PR Review Automation
 
@@ -131,23 +111,17 @@ This project includes a pull request review workflow using GitHub Actions:
 
 This setup provides lightweight, no-cost PR quality feedback without requiring paid third-party tools.
 
----
-
 ## ➡ Execution Strategy
 
 - Pull requests: fast smoke execution in Chromium using `@smoke` tags.
 - Main branch and nightly schedule: full browser matrix (`chromium`, `firefox`, `webkit`).
-
----
 
 ## 📚 References
 
 - [Playwright Documentation](https://playwright.dev/docs/intro)
 - [Playwright best practices](https://playwright.dev/docs/best-practices)
 
----
-
-## 👩‍💻 Author
+## 👩🏻‍💻 Author
 
 **Carolina Olguin** — Senior QA Engineer · [GitHub](https://github.com/olguinc) · [LinkedIn](https://www.linkedin.com/in/carolina-olg/)
 
